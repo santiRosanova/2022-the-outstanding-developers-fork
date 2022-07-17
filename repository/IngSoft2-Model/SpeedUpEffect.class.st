@@ -22,6 +22,12 @@ SpeedUpEffect >> applyEffectTo: aSpaceship on: aBoard [
 	^ self applyEffectOn: aBoard
 ]
 
+{ #category : #accessing }
+SpeedUpEffect >> effectOnAThrowOf: aNumber [
+
+	^ 0
+]
+
 { #category : #effects }
 SpeedUpEffect >> effectOnPosition [
 

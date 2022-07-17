@@ -50,6 +50,12 @@ MoonWalkEffect >> displacing: aNumberOfBoxes [
 ]
 
 { #category : #effects }
+MoonWalkEffect >> effectOnAThrowOf: aNumber [
+
+	^ 0
+]
+
+{ #category : #effects }
 MoonWalkEffect >> effectOnPosition [
 
 	^ displacement

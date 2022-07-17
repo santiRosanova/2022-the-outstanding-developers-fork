@@ -8,7 +8,9 @@ Class {
 		'laps',
 		'boardUnitLength',
 		'game',
-		'lastBox'
+		'lastBox',
+		'maxDiceRollResult',
+		'spaceshipsFreed'
 	],
 	#category : #'IngSoft2-Model'
 }
@@ -158,6 +160,13 @@ Board >> boxPositionOf: aSpaceship [
 	^ (self positionOf: aSpaceship) position
 ]
 
+{ #category : #playing }
+Board >> free: aSpaceship [ 
+	
+	spaceshipsFreed add: aSpaceship
+
+]
+
 { #category : #validation }
 Board >> isSpaceshipsTurn: aSpaceship [
 
@@ -183,21 +192,34 @@ Board >> lastSpacechipToHavePlayed [
 	^ (positions at: turnHandler sequenceValueInUse) spaceship
 ]
 
+{ #category : #properties }
+Board >> maxDiceRollResult: value [
+	
+	maxDiceRollResult := value
+]
+
 { #category : #movement }
 Board >> move: aSpaceship by: aNumberOfBoxes [
 
-	| newPositionWithoutEffect positionAmongPositions currentBox movementAfterEffect currentBoardPosition currentLap newPositionAfterEffect |
+	| newPositionWithoutEffect positionAmongPositions currentBox newBox movementAfterEffect currentBoardPosition currentLap newPositionAfterEffect numberOfBoxes |
 	positionAmongPositions := self positionInPositionsOf: aSpaceship.
 	self assertThisIsPlayersTurn: positionAmongPositions.
-	
+
 	currentBoardPosition := (positions at: positionAmongPositions)
 		                        position.
 	currentLap := (positions at: positionAmongPositions) lap.
+	numberOfBoxes := aNumberOfBoxes. 
+		currentBoardPosition > 0 ifTrue: [ 
+			currentBox := boxes at: currentBoardPosition.
+			(aNumberOfBoxes = maxDiceRollResult or: (self wasFreed: aSpaceship) = 1) ifFalse: [ 
+				numberOfBoxes := aNumberOfBoxes
+				                 + (currentBox effectOnAThrowOf: aNumberOfBoxes) ] ].
+
 	newPositionWithoutEffect := self
 		                            move: aSpaceship
 		                            in: currentBoardPosition
 		                            and: currentLap
-		                            by: aNumberOfBoxes.
+		                            by: numberOfBoxes.
 
 	newPositionWithoutEffect position > boxes size ifTrue: [ 
 		positions
@@ -205,9 +227,9 @@ Board >> move: aSpaceship by: aNumberOfBoxes [
 			to: positionAmongPositions
 			with: { newPositionWithoutEffect }.
 		^ self ].
-	currentBox := boxes at: newPositionWithoutEffect position.
-	lastBox := currentBox.
-	movementAfterEffect := currentBox applyEffectOn: self.
+	newBox := boxes at: newPositionWithoutEffect position.
+	lastBox := newBox.
+	movementAfterEffect := newBox applyEffectOn: self.
 	movementAfterEffect = 'Do not move'
 		ifFalse: [ 
 			newPositionAfterEffect := self
@@ -326,7 +348,8 @@ Board >> of: aNumberOfBoxes and: aLength playedFor: someLaps with: aBoxSequence 
 		boxes add: (aBoxSequence at: sequenceHandler nextValue) ].
 	laps := someLaps.
 	boardUnitLength := aLength.
-	lastBox := NoEffect create
+	lastBox := NoEffect create.
+	spaceshipsFreed := OrderedCollection new.
 ]
 
 { #category : #properties }
@@ -380,6 +403,17 @@ Board >> thereIsAWinner [
 	^ positions anySatisfy: [ :boardPosition | 
 		  (boardPosition position > self amountOfBoxes
 		  and: [boardPosition lap = laps]) or: [boardPosition lap > laps]]
+]
+
+{ #category : #playing }
+Board >> wasFreed: aSpaceship [
+
+	| spaceshipFreed |
+	spaceshipFreed := spaceshipsFreed findFirst: [ :spaceship | 
+		                  spaceship = aSpaceship ].
+	spaceshipFreed > 0 ifFalse: [ ^ self ].
+	spaceshipsFreed removeAt: spaceshipFreed.
+	^ 1
 ]
 
 { #category : #properties }

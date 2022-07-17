@@ -438,7 +438,6 @@ OutstandingSpaceshipsGameTest >> testGameWithSpaceshipsAFiniteBoardAndADiceCupEn
 	aCardDistribution add: (Distribution
 			 withProbabilityOf: 1
 			 for: OverloadCard).
-
 	anOutstandingGame := OutstandingSpaceshipsGame
 		                     playedByMany: { 'Delorean'. 'Enterprise' }
 		                     on: aBoard

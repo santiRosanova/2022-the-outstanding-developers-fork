@@ -159,6 +159,12 @@ OutstandingSpaceshipsGame >> deckOf: aSpaceship [
 		  spaceshipCardDeck spaceship = aSpaceship ]
 ]
 
+{ #category : #playing }
+OutstandingSpaceshipsGame >> free: aSpaceship [
+
+	board free: aSpaceship
+]
+
 { #category : #initialization }
 OutstandingSpaceshipsGame >> initializeWith: aBoard many: spaceships throwing: someDice using: aCardDistribution [
 
@@ -167,6 +173,7 @@ OutstandingSpaceshipsGame >> initializeWith: aBoard many: spaceships throwing: s
 	aBoard playingWith: spaceships in: self.
 	spaceshipsPlaying := spaceships.
 	dice := someDice.
+	aBoard maxDiceRollResult: self maxDiceRollResult.
 	stateOfGame := GameNotWonState new.
 	spaceshipsAffectingCardDeck := OrderedCollection new.
 	self dealWith: aCardDistribution
@@ -176,6 +183,12 @@ OutstandingSpaceshipsGame >> initializeWith: aBoard many: spaceships throwing: s
 OutstandingSpaceshipsGame >> lastPlayedCard [
 
 	^ lastPlayedCard
+]
+
+{ #category : #accessing }
+OutstandingSpaceshipsGame >> maxDiceRollResult [
+
+	^ dice maxRollResult
 ]
 
 { #category : #playing }

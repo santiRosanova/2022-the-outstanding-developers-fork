@@ -25,6 +25,12 @@ Box >> effect [
 	^ effect
 ]
 
+{ #category : #accessing }
+Box >> effectOnAThrowOf: aNumber [
+
+	^ effect effectOnAThrowOf: aNumber
+]
+
 { #category : #effects }
 Box >> effectOnPosition [
 

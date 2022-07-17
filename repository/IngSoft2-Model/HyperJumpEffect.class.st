@@ -57,6 +57,12 @@ HyperJumpEffect >> assertSequenceSizeIsValid: aParsecSequenceSize [
 ]
 
 { #category : #effects }
+HyperJumpEffect >> effectOnAThrowOf: aNumber [
+
+	^ 0
+]
+
+{ #category : #effects }
 HyperJumpEffect >> effectOnPosition [
 
 	^ sequenceUnits at: parsecsValuesHandler nextValue

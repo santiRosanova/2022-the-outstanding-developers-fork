@@ -17,6 +17,12 @@ AtomicBombEffect >> applyEffectOn: aBoard [
 	^ 'Do not move'
 ]
 
+{ #category : #accessing }
+AtomicBombEffect >> effectOnAThrowOf: aNumber [
+
+	^ 0
+]
+
 { #category : #effects }
 AtomicBombEffect >> reApplyEffectTo: aSpaceship on: aBoard [
 

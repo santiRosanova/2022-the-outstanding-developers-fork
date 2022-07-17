@@ -613,6 +613,50 @@ BoardTest >> testSpaceshipRemainsInTheInitialPositionIfEffectIsApplied [
 ]
 
 { #category : #tests }
+BoardTest >> testSpaceshipThatLandsOnJailBoxDoesNotMoveUntilItThrowsTheMaximum [
+
+	| board noEffect anEffect boxSequence box1 box2 box3 box4 box5 aCardDistribution anOutstandingGame |
+	noEffect := NoEffect new.
+	anEffect := JailEffect new.
+
+	box1 := Box with: anEffect.
+	box2 := Box with: noEffect.
+	box3 := Box with: noEffect.
+	box4 := Box with: noEffect.
+	box5 := Box with: noEffect.
+
+	aCardDistribution := OrderedCollection new.
+	aCardDistribution add:
+		(Distribution withProbabilityOf: 1 for: OverloadCard).
+
+	boxSequence := { 
+		               box1.
+		               box2.
+		               box3.
+		               box4.
+		               box5 }.
+	board := Board
+		         of: 10
+		         and: (ParsecUnit of: 10)
+		         playedFor: 2
+		         with: boxSequence.
+
+	anOutstandingGame := OutstandingSpaceshipsGame
+		                     playedBy: 'Delorean'
+		                     on: board
+		                     throwing: (LoadedDie withSequence: {1. 2. 2. 3})
+		                     using: aCardDistribution.
+	anOutstandingGame play.
+	self assert: (board boxPositionOf: 'Delorean') equals: 1.
+	anOutstandingGame play.
+	self assert: (board boxPositionOf: 'Delorean') equals: 1.
+	anOutstandingGame play.
+	self assert: (board boxPositionOf: 'Delorean') equals: 1.
+	anOutstandingGame play.
+	self assert: (board boxPositionOf: 'Delorean') equals: 4.
+]
+
+{ #category : #tests }
 BoardTest >> testSpaceshipThatLandsOnMoonWalkBoxCantMakeOthersGoToNegativePositions [
 
 	| board noEffect anEffect boxSequence box1 box2 box3 box4 box5 aCardDistribution anOutstandingGame |

@@ -165,6 +165,15 @@ BoxTest >> testHyperJumpBoxEffectDisplacesSixLightYearsForward [
 ]
 
 { #category : #tests }
+BoxTest >> testJailBoxEffectIsZero [
+
+	| box anEffect |
+	anEffect := JailEffect new.
+	box := Box with: anEffect.
+	self assert: box effectOnPosition equals: 0.
+]
+
+{ #category : #tests }
 BoxTest >> testMoonWalkBoxCantBeCreatedWithNegativeDisplacement [
 
 	self

@@ -19,6 +19,12 @@ DiceCup >> initializeWithAll: aDice [
 	dice := aDice
 ]
 
+{ #category : #accessing }
+DiceCup >> maxRollResult [
+
+	^ dice inject: 0 into: [ :a :b | a + (b maxRollResult) ]
+]
+
 { #category : #rolling }
 DiceCup >> roll [
 

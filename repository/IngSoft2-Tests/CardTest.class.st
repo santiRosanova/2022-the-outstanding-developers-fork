@@ -652,6 +652,55 @@ CardTest >> testEffectOfMultipleSpeedCardsIsAddedUpIntoTheSpaceshipDiceThrow [
 ]
 
 { #category : #tests }
+CardTest >> testFreedomCardTakesTheSpaceshipOutOfJail [
+
+	| aBoard aCardDistribution anOutstandingGame jailEffect box1 box2 box3 box4 box5 |
+	
+	jailEffect := JailEffect create.
+
+	box1 := Box with: jailEffect.
+	box2 := Box with: NoEffect new.
+	box3 := Box with: NoEffect new.
+	box4 := Box with: NoEffect new.
+	box5 := Box with: NoEffect new.
+
+	aBoard := Board
+		          of: 20
+		          and: (ParsecUnit of: 20)
+		          playedFor: 1
+		          with: { 
+				          box1.
+				          box2.
+				          box3.
+				          box4.
+				          box5 }.
+	
+	aCardDistribution := OrderedCollection new.
+	aCardDistribution add:
+		(Distribution withProbabilityOf: 1 for: FreedomCard).
+		
+	anOutstandingGame := OutstandingSpaceshipsGame
+		                     playedByMany: { 'Enterprise'. 'Delorean' }
+		                     on: aBoard
+		                     throwing: (LoadedDie withSequence: { 1. 2 })
+		                     using: aCardDistribution.
+
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 1.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Delorean') equals: 2.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 1.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Delorean') equals: 4.
+	anOutstandingGame
+		throws: (FreedomCard thrownAt: 'Enterprise')
+		from: 'Enterprise'.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 2.
+]
+
+{ #category : #tests }
 CardTest >> testOverloadCardProducesSpaceshipToGoBackwards [
 
 	| aBoard aCardDistribution anOutstandingGame |
