@@ -8,7 +8,12 @@ Class {
 		'laps',
 		'boardUnitLength',
 		'game',
-		'lastBox'
+		'lastBox',
+		'maxDiceRollResult',
+		'nextHasToPlayDouble',
+		'repeatTurn',
+		'repeatSpaceshipPlaying',
+		'spaceshipsInJail'
 	],
 	#category : #'IngSoft2-Model'
 }
@@ -55,6 +60,15 @@ Board class >> of: aNumberOfBoxes and: aLength playedFor: someLaps with: aBoxSeq
 		  and: aLength
 		  playedFor: someLaps
 		  with: aBoxSequence
+]
+
+{ #category : #playing }
+Board >> addToJail: aSpaceship [
+
+	| spaceshipToAdd |
+	spaceshipToAdd := spaceshipsInJail findFirst: [ :spaceship | 
+		                  spaceship = aSpaceship ].
+	spaceshipToAdd > 0 ifFalse: [ spaceshipsInJail add: aSpaceship ]
 ]
 
 { #category : #properties }
@@ -158,6 +172,30 @@ Board >> boxPositionOf: aSpaceship [
 	^ (self positionOf: aSpaceship) position
 ]
 
+{ #category : #playing }
+Board >> free: aSpaceship [
+
+	spaceshipsInJail remove: aSpaceship ifAbsent: [ 
+		Error signal:
+			'Freedom card cant be used if the spaceship is not in jail' ]
+]
+
+{ #category : #playing }
+Board >> invertTurnsOrder [
+		
+	positions := positions reversed.
+]
+
+{ #category : #playing }
+Board >> isInJail: aSpaceship [
+
+	| spaceshipInJail |
+	spaceshipInJail := spaceshipsInJail findFirst: [ :spaceship | 
+		                  spaceship = aSpaceship ].
+	spaceshipInJail > 0 ifTrue: [ ^ true ].
+	^ false
+]
+
 { #category : #validation }
 Board >> isSpaceshipsTurn: aSpaceship [
 
@@ -183,16 +221,28 @@ Board >> lastSpacechipToHavePlayed [
 	^ (positions at: turnHandler sequenceValueInUse) spaceship
 ]
 
+{ #category : #properties }
+Board >> maxDiceRollResult: value [
+	
+	maxDiceRollResult := value
+]
+
 { #category : #movement }
 Board >> move: aSpaceship by: aNumberOfBoxes [
 
-	| newPositionWithoutEffect positionAmongPositions currentBox movementAfterEffect currentBoardPosition currentLap newPositionAfterEffect |
+	| newPositionWithoutEffect positionAmongPositions newBox movementAfterEffect currentBoardPosition currentLap newPositionAfterEffect |
 	positionAmongPositions := self positionInPositionsOf: aSpaceship.
 	self assertThisIsPlayersTurn: positionAmongPositions.
-	
+
 	currentBoardPosition := (positions at: positionAmongPositions)
 		                        position.
 	currentLap := (positions at: positionAmongPositions) lap.
+
+	(self isInJail: aSpaceship) ifTrue: [ 
+		aNumberOfBoxes = maxDiceRollResult
+			ifTrue: [ self free: aSpaceship ]
+			ifFalse: [ ^ self ] ].
+
 	newPositionWithoutEffect := self
 		                            move: aSpaceship
 		                            in: currentBoardPosition
@@ -205,9 +255,9 @@ Board >> move: aSpaceship by: aNumberOfBoxes [
 			to: positionAmongPositions
 			with: { newPositionWithoutEffect }.
 		^ self ].
-	currentBox := boxes at: newPositionWithoutEffect position.
-	lastBox := currentBox.
-	movementAfterEffect := currentBox applyEffectOn: self.
+	newBox := boxes at: newPositionWithoutEffect position.
+	lastBox := newBox.
+	movementAfterEffect := newBox applyEffectOn: self.
 	movementAfterEffect = 'Do not move'
 		ifFalse: [ 
 			newPositionAfterEffect := self
@@ -216,6 +266,7 @@ Board >> move: aSpaceship by: aNumberOfBoxes [
 				                          and: newPositionWithoutEffect lap
 				                          by: movementAfterEffect ]
 		ifTrue: [ ^ self ].
+	newBox effectOn: self to: aSpaceship.
 	positions
 		replaceFrom: positionAmongPositions
 		to: positionAmongPositions
@@ -294,8 +345,19 @@ Board >> movePlayingSpaceshipAt: aPosition by: anAmount [
 Board >> moveSpaceship: aNumberOfBoxes [
 
 	| spaceshipPlaying |
+	
+	repeatTurn ifTrue: [ 
+		self move: repeatSpaceshipPlaying by: aNumberOfBoxes.
+		repeatTurn := false.
+		^ self ].
+	
 	spaceshipPlaying := (positions at: turnHandler nextValue) spaceship.
-	self move: spaceshipPlaying by: aNumberOfBoxes
+	self move: spaceshipPlaying by: aNumberOfBoxes.
+
+	nextHasToPlayDouble ifFalse: [ ^ self ].
+	repeatTurn := true.
+	nextHasToPlayDouble := false.
+	repeatSpaceshipPlaying := spaceshipPlaying
 ]
 
 { #category : #asserting }
@@ -326,7 +388,10 @@ Board >> of: aNumberOfBoxes and: aLength playedFor: someLaps with: aBoxSequence 
 		boxes add: (aBoxSequence at: sequenceHandler nextValue) ].
 	laps := someLaps.
 	boardUnitLength := aLength.
-	lastBox := NoEffect create
+	lastBox := NoEffect create.
+	spaceshipsInJail := OrderedCollection new.
+	repeatTurn := false.
+	nextHasToPlayDouble := false
 ]
 
 { #category : #properties }
@@ -366,6 +431,18 @@ Board >> rankingPositionOf: aSpaceshipName [
 				ifTrue: [ notFound := false ]
 				ifFalse: [ index := index + 1 ] ].
 	^ index
+]
+
+{ #category : #playing }
+Board >> repeatActualTurn [
+
+	nextHasToPlayDouble := true
+]
+
+{ #category : #playing }
+Board >> skipActualTurn [
+
+	positions at: turnHandler nextValue
 ]
 
 { #category : #accessing }

@@ -68,6 +68,12 @@ CardAwarderEffect >> dealCardTo: aSpaceship in: aBoard [
 ]
 
 { #category : #effects }
+CardAwarderEffect >> effectOn: aBoard to: aSpaceship [ 
+	
+	^ 'No effect'
+]
+
+{ #category : #effects }
 CardAwarderEffect >> effectOnPosition [
 
 	^ 0

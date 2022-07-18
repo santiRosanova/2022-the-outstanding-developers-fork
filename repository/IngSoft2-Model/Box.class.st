@@ -26,6 +26,12 @@ Box >> effect [
 ]
 
 { #category : #effects }
+Box >> effectOn: aBoard to: aSpaceship [
+
+	^ effect effectOn: aBoard to: aSpaceship
+]
+
+{ #category : #effects }
 Box >> effectOnPosition [
 
 	^ effect effectOnPosition

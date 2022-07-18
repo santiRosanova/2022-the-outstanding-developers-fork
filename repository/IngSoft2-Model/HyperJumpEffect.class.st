@@ -57,6 +57,12 @@ HyperJumpEffect >> assertSequenceSizeIsValid: aParsecSequenceSize [
 ]
 
 { #category : #effects }
+HyperJumpEffect >> effectOn: aBoard to: aSpaceship [ 
+	
+	^ 'No effect'
+]
+
+{ #category : #effects }
 HyperJumpEffect >> effectOnPosition [
 
 	^ sequenceUnits at: parsecsValuesHandler nextValue

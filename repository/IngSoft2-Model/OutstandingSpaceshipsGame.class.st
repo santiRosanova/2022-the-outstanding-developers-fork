@@ -66,10 +66,12 @@ OutstandingSpaceshipsGame >> addAffecting: aSpaceshipCardHolder [
 ]
 
 { #category : #playing }
-OutstandingSpaceshipsGame >> addAffectingAll: aCard [ 
-	
+OutstandingSpaceshipsGame >> addAffectingAll: aCard [
+
 	lastPlayedCard := aCard.
-	spaceshipsPlaying do: [ :spaceship | self addAffecting: (SpaceshipCardHolder of: spaceship holding: aCard) ]
+	spaceshipsPlaying do: [ :spaceship | 
+		self addAffecting:
+			(SpaceshipCardHolder of: spaceship holding: aCard) ]
 ]
 
 { #category : #playing }
@@ -118,9 +120,10 @@ OutstandingSpaceshipsGame >> cancel: aCard affecting: aSpaceship [
 
 { #category : #playing }
 OutstandingSpaceshipsGame >> cancelAll: cardType [
+
 	spaceshipsPlaying do: [ :spaceship | 
 		self cancel: cardType affecting: spaceship ].
-	lastPlayedCard := CancellationCard create.
+	lastPlayedCard := CancellationCard create
 ]
 
 { #category : #accessing }
@@ -159,6 +162,13 @@ OutstandingSpaceshipsGame >> deckOf: aSpaceship [
 		  spaceshipCardDeck spaceship = aSpaceship ]
 ]
 
+{ #category : #playing }
+OutstandingSpaceshipsGame >> free: aSpaceship [
+
+	board free: aSpaceship.
+	lastPlayedCard := FreedomCard create
+]
+
 { #category : #initialization }
 OutstandingSpaceshipsGame >> initializeWith: aBoard many: spaceships throwing: someDice using: aCardDistribution [
 
@@ -167,15 +177,29 @@ OutstandingSpaceshipsGame >> initializeWith: aBoard many: spaceships throwing: s
 	aBoard playingWith: spaceships in: self.
 	spaceshipsPlaying := spaceships.
 	dice := someDice.
+	aBoard maxDiceRollResult: self maxDiceRollResult.
 	stateOfGame := GameNotWonState new.
 	spaceshipsAffectingCardDeck := OrderedCollection new.
 	self dealWith: aCardDistribution
+]
+
+{ #category : #playing }
+OutstandingSpaceshipsGame >> invertTurnsOrder [
+
+	board invertTurnsOrder.
+	lastPlayedCard := ReverseCard create
 ]
 
 { #category : #accessing }
 OutstandingSpaceshipsGame >> lastPlayedCard [
 
 	^ lastPlayedCard
+]
+
+{ #category : #accessing }
+OutstandingSpaceshipsGame >> maxDiceRollResult [
+
+	^ dice maxRollResult
 ]
 
 { #category : #playing }
@@ -199,10 +223,25 @@ OutstandingSpaceshipsGame >> playTurn [
 ]
 
 { #category : #playing }
+OutstandingSpaceshipsGame >> repeatActualTurn [
+
+	board repeatActualTurn.
+	lastPlayedCard := DoubleCard create
+]
+
+{ #category : #playing }
 OutstandingSpaceshipsGame >> repeatEffectOn: aSpaceship [
 
 	board lastBox effect reApplyEffectTo: aSpaceship on: board.
 	lastPlayedCard := RepeatCard create
+]
+
+{ #category : #playing }
+OutstandingSpaceshipsGame >> skipActualTurn [
+
+	board skipActualTurn.
+	lastPlayedCard := SkipCard create
+	
 ]
 
 { #category : #playing }
@@ -228,8 +267,8 @@ OutstandingSpaceshipsGame >> throws: aCard from: aSpaceship [
 	self
 		assertCardCanBeThrown: (spaceshipsCardDeck at: cardToBeRemoved) card
 		from: aSpaceship.
+	aCard incorporateTo: self.
 	spaceshipsCardDeck removeAt: cardToBeRemoved.
-	aCard incorporateTo: self
 ]
 
 { #category : #results }

@@ -10,19 +10,22 @@ Class {
 
 { #category : #'instance creation' }
 LoadedDie class >> assertValid: aSequence [
-	
-	(aSequence allSatisfy: [ :number | number > 0 ]) ifFalse: [ Error signal: 'Die should be loaded with numbers greater than zero' ]
+
+	(aSequence allSatisfy: [ :number | number > 0 ]) ifFalse: [ 
+		Error signal: 'Die should be loaded with numbers greater than zero' ]
 ]
 
 { #category : #'instance creation' }
 LoadedDie class >> with: result [
-	^self withSequence: {result}.
+
+	^ self withSequence: { result }
 ]
 
 { #category : #'instance creation' }
 LoadedDie class >> withSequence: aSequence [
+
 	self assertValid: aSequence.
-	^self new initializeWithASequence: aSequence.
+	^ self new initializeWithASequence: aSequence
 ]
 
 { #category : #initialization }
@@ -30,6 +33,12 @@ LoadedDie >> initializeWithASequence: aSequence [
 
 	sequence := aSequence.
 	sequenceHandler := SequenceHandler for: aSequence size
+]
+
+{ #category : #accessing }
+LoadedDie >> maxRollResult [
+
+	^ sequence inject: 0 into: [ :a :b | a max: b ]
 ]
 
 { #category : #rolling }

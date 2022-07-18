@@ -27,6 +27,12 @@ Die >> initializeWith: aNumberOfSides [
 	numberOfSides := aNumberOfSides
 ]
 
+{ #category : #accessing }
+Die >> maxRollResult [
+
+	^ numberOfSides
+]
+
 { #category : #rolling }
 Die >> roll [
 

@@ -19,6 +19,12 @@ DiceCup >> initializeWithAll: aDice [
 	dice := aDice
 ]
 
+{ #category : #accessing }
+DiceCup >> maxRollResult [
+
+	^ dice sum: [ :die | die maxRollResult ]
+]
+
 { #category : #rolling }
 DiceCup >> roll [
 
