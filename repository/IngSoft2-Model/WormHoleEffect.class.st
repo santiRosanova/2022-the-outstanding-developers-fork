@@ -23,15 +23,15 @@ WormHoleEffect >> applyEffectTo: aSpaceship on: aBoard [
 ]
 
 { #category : #effects }
-WormHoleEffect >> effectOnPosition [
-
-	^ -4
+WormHoleEffect >> effectOn: aBoard to: aSpaceship [ 
+	
+	^ 'No effect'
 ]
 
 { #category : #effects }
-WormHoleEffect >> effectOnTheGame [
+WormHoleEffect >> effectOnPosition [
 
-	^ 'No effect'
+	^ -4
 ]
 
 { #category : #effects }

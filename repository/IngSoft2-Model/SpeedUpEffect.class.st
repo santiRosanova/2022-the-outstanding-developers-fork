@@ -23,15 +23,15 @@ SpeedUpEffect >> applyEffectTo: aSpaceship on: aBoard [
 ]
 
 { #category : #effects }
-SpeedUpEffect >> effectOnPosition [
-
-	^ 4
+SpeedUpEffect >> effectOn: aBoard to: aSpaceship [ 
+	
+	^ 'No effect'
 ]
 
 { #category : #effects }
-SpeedUpEffect >> effectOnTheGame [
+SpeedUpEffect >> effectOnPosition [
 
-	^ 'No effect'
+	^ 4
 ]
 
 { #category : #effects }

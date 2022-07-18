@@ -50,15 +50,15 @@ MoonWalkEffect >> displacing: aNumberOfBoxes [
 ]
 
 { #category : #effects }
-MoonWalkEffect >> effectOnPosition [
-
-	^ displacement
+MoonWalkEffect >> effectOn: aBoard to: aSpaceship [ 
+	
+	^ 'No effect'
 ]
 
 { #category : #effects }
-MoonWalkEffect >> effectOnTheGame [
+MoonWalkEffect >> effectOnPosition [
 
-	^ 'No effect'
+	^ displacement
 ]
 
 { #category : #effects }

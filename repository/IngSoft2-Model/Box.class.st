@@ -26,15 +26,15 @@ Box >> effect [
 ]
 
 { #category : #effects }
-Box >> effectOnPosition [
+Box >> effectOn: aBoard to: aSpaceship [
 
-	^ effect effectOnPosition
+	^ effect effectOn: aBoard to: aSpaceship
 ]
 
 { #category : #effects }
-Box >> effectOnTheGame [
+Box >> effectOnPosition [
 
-	^ effect effectOnTheGame
+	^ effect effectOnPosition
 ]
 
 { #category : #accessing }

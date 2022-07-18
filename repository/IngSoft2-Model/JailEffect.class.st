@@ -17,13 +17,13 @@ JailEffect >> applyEffectOn: aBoard [
 ]
 
 { #category : #effects }
-JailEffect >> effectOnPosition [
+JailEffect >> effectOn: aBoard to: aSpaceship [ 
 
-	^ 0
+	aBoard addToJail: aSpaceship
 ]
 
 { #category : #effects }
-JailEffect >> effectOnTheGame [
+JailEffect >> effectOnPosition [
 
-	^ 'Add to Jail'
+	^ 0
 ]

@@ -230,7 +230,7 @@ Board >> maxDiceRollResult: value [
 { #category : #movement }
 Board >> move: aSpaceship by: aNumberOfBoxes [
 
-	| newPositionWithoutEffect positionAmongPositions newBox movementAfterEffect currentBoardPosition currentLap newPositionAfterEffect affectingList |
+	| newPositionWithoutEffect positionAmongPositions newBox movementAfterEffect currentBoardPosition currentLap newPositionAfterEffect |
 	positionAmongPositions := self positionInPositionsOf: aSpaceship.
 	self assertThisIsPlayersTurn: positionAmongPositions.
 
@@ -266,8 +266,7 @@ Board >> move: aSpaceship by: aNumberOfBoxes [
 				                          and: newPositionWithoutEffect lap
 				                          by: movementAfterEffect ]
 		ifTrue: [ ^ self ].
-	affectingList := newBox effectOnTheGame.
-	affectingList = 'Add to Jail' ifTrue: [ self addToJail: aSpaceship ].
+	newBox effectOn: self to: aSpaceship.
 	positions
 		replaceFrom: positionAmongPositions
 		to: positionAmongPositions

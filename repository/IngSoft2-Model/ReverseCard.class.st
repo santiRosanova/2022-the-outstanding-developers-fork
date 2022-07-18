@@ -44,6 +44,24 @@ ReverseCard >> assertItIsThrowableInTurn: anAssertion in: aGame [
 		anAssertion.
 ]
 
+{ #category : #accessing }
+ReverseCard >> cardBehaviour [
+
+	^ typeOfCard
+]
+
+{ #category : #playing }
+ReverseCard >> incorporate: aCard to: anOutstandingSpaceshipsGame [ 
+	
+	self cardBehaviour incorporate: aCard to: anOutstandingSpaceshipsGame 
+]
+
+{ #category : #playing }
+ReverseCard >> incorporateTo: anOutstandingSpaceshipsGame the: cardElement [
+
+	anOutstandingSpaceshipsGame invertTurnsOrder.
+]
+
 { #category : #initialization }
 ReverseCard >> initializeAs: aTypeOfCard [
 

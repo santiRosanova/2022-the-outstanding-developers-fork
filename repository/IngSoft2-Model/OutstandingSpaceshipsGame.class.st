@@ -186,7 +186,8 @@ OutstandingSpaceshipsGame >> initializeWith: aBoard many: spaceships throwing: s
 { #category : #playing }
 OutstandingSpaceshipsGame >> invertTurnsOrder [
 
-	board invertTurnsOrder
+	board invertTurnsOrder.
+	lastPlayedCard := ReverseCard create
 ]
 
 { #category : #accessing }

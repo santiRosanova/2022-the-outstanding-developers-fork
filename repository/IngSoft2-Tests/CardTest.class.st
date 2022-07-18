@@ -1408,7 +1408,7 @@ CardTest >> testRedoRepeatsReverse [
 	aCardDistribution := OrderedCollection new.
 	aCardDistribution add: (Distribution
 			 withProbabilityOf: 1
-			 for: (SkipCard)).
+			 for: (ReverseCard)).
 	anotherCardDistribution := OrderedCollection new.
 	anotherCardDistribution add:
 		(Distribution withProbabilityOf: 1 for: RedoCard).
@@ -1432,7 +1432,7 @@ CardTest >> testRedoRepeatsReverse [
 				          box5 }.
 
 	anOutstandingGame := OutstandingSpaceshipsGame
-		                     playedByMany: { 'Enterprise'. 'Delorean'. 'Zathura' }
+		                     playedByMany: { 'Enterprise'. 'Delorean'. 'Zathura'. 'MillenniumFalcon' }
 		                     on: aBoard
 		                     throwing: (LoadedDie withSequence: { 1. 2. 1. 3. 4 })
 		                     using: aCardDistribution.
@@ -1441,16 +1441,23 @@ CardTest >> testRedoRepeatsReverse [
 	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 1.
 	self assert: (aBoard boxPositionOf: 'Delorean') equals: 2.
 	anOutstandingGame
-		throws: SkipCard
-		from: 'Enterprise'.
+		throws: ReverseCard
+		from: 'Delorean'.
 	anOutstandingGame play.
-	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 2.
+	self assert: (aBoard boxPositionOf: 'Delorean') equals: 3.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 4.
 	anOutstandingGame
 		throws: RedoCard
 		from: 'Enterprise'.
 	anOutstandingGame play.
-	self assert: (aBoard boxPositionOf: 'Delorean') equals: 2.
-	self assert: (aBoard boxPositionOf: 'Zathura') equals: 3.
+	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 8.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Delorean') equals: 4.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Zathura') equals: 2.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'MillenniumFalcon') equals: 1.
 ]
 
 { #category : #tests }
