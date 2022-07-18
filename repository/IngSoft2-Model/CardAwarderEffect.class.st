@@ -68,15 +68,15 @@ CardAwarderEffect >> dealCardTo: aSpaceship in: aBoard [
 ]
 
 { #category : #effects }
-CardAwarderEffect >> effectOnAThrowOf: aNumber [
+CardAwarderEffect >> effectOnPosition [
 
 	^ 0
 ]
 
 { #category : #effects }
-CardAwarderEffect >> effectOnPosition [
+CardAwarderEffect >> effectOnTheGame [
 
-	^ 0
+	^ 'No effect'
 ]
 
 { #category : #initialization }

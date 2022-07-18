@@ -17,13 +17,13 @@ JailEffect >> applyEffectOn: aBoard [
 ]
 
 { #category : #effects }
-JailEffect >> effectOnAThrowOf: aNumber [ 
-	
-	^ (aNumber * -1)
-]
-
-{ #category : #effects }
 JailEffect >> effectOnPosition [
 
 	^ 0
+]
+
+{ #category : #effects }
+JailEffect >> effectOnTheGame [
+
+	^ 'Add to Jail'
 ]

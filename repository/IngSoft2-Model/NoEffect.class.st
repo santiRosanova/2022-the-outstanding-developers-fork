@@ -22,16 +22,16 @@ NoEffect >> applyEffectTo: aSpaceship on: aBoard [
 	^ self applyEffectOn: aBoard
 ]
 
-{ #category : #effects }
-NoEffect >> effectOnAThrowOf: aNumber [
-
-	^ 0
-]
-
 { #category : #effect }
 NoEffect >> effectOnPosition [
 
 	^ 0
+]
+
+{ #category : #effects }
+NoEffect >> effectOnTheGame [
+
+	^ 'No effect'
 ]
 
 { #category : #effects }

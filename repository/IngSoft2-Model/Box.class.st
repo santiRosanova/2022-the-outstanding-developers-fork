@@ -37,6 +37,12 @@ Box >> effectOnPosition [
 	^ effect effectOnPosition
 ]
 
+{ #category : #effects }
+Box >> effectOnTheGame [
+
+	^ effect effectOnTheGame
+]
+
 { #category : #accessing }
 Box >> effectType [
 

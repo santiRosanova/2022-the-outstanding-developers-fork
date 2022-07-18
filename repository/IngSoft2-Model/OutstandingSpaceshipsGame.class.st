@@ -179,6 +179,12 @@ OutstandingSpaceshipsGame >> initializeWith: aBoard many: spaceships throwing: s
 	self dealWith: aCardDistribution
 ]
 
+{ #category : #playing }
+OutstandingSpaceshipsGame >> invertTurnsOrder [
+
+	board invertTurnsOrder
+]
+
 { #category : #accessing }
 OutstandingSpaceshipsGame >> lastPlayedCard [
 
@@ -212,10 +218,22 @@ OutstandingSpaceshipsGame >> playTurn [
 ]
 
 { #category : #playing }
+OutstandingSpaceshipsGame >> repeatActualTurn [
+
+	board repeatActualTurn.
+]
+
+{ #category : #playing }
 OutstandingSpaceshipsGame >> repeatEffectOn: aSpaceship [
 
 	board lastBox effect reApplyEffectTo: aSpaceship on: board.
 	lastPlayedCard := RepeatCard create
+]
+
+{ #category : #playing }
+OutstandingSpaceshipsGame >> skipActualTurn [
+
+	board skipActualTurn.
 ]
 
 { #category : #playing }
@@ -241,8 +259,8 @@ OutstandingSpaceshipsGame >> throws: aCard from: aSpaceship [
 	self
 		assertCardCanBeThrown: (spaceshipsCardDeck at: cardToBeRemoved) card
 		from: aSpaceship.
+	aCard incorporateTo: self.
 	spaceshipsCardDeck removeAt: cardToBeRemoved.
-	aCard incorporateTo: self
 ]
 
 { #category : #results }

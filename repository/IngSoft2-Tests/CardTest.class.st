@@ -619,6 +619,42 @@ CardTest >> testCancellationCardRemovesOnlyOneAccelerationPermanentCard [
 ]
 
 { #category : #tests }
+CardTest >> testDoubleCardLetsTheActualSpaceshipToPlayTheTurnAgain [
+
+	| aBoard aCardDistribution anOutstandingGame |
+	aBoard := Board
+		          of: 10
+		          and: (ParsecUnit of: 10)
+		          playedFor: 1
+		          with: { (Box with: NoEffect new) }.
+
+	aCardDistribution := OrderedCollection new.
+	aCardDistribution add:
+		(Distribution withProbabilityOf: 1 for: DoubleCard).
+	anOutstandingGame := OutstandingSpaceshipsGame
+		                     playedByMany: { 'Enterprise'. 'Delorean'. 'Zathura'. 'MillenniumFalcon' }
+		                     on: aBoard
+		                     throwing:
+		                     (LoadedDie withSequence: { 3. 4. 2. 1 })
+		                     using: aCardDistribution.
+	anOutstandingGame play.
+	anOutstandingGame play.
+
+	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 3.
+	self assert: (aBoard boxPositionOf: 'Delorean') equals: 4.
+	anOutstandingGame
+		throws: DoubleCard
+		from: 'Zathura'.
+
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Zathura') equals: 2.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Zathura') equals: 3.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'MillenniumFalcon') equals: 3.
+]
+
+{ #category : #tests }
 CardTest >> testEffectOfMultipleSpeedCardsIsAddedUpIntoTheSpaceshipDiceThrow [
 
 	| aBoard aCardDistribution anOutstandingGame |
@@ -649,6 +685,52 @@ CardTest >> testEffectOfMultipleSpeedCardsIsAddedUpIntoTheSpaceshipDiceThrow [
 
 	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 1.
 	self assert: (aBoard boxPositionOf: 'Delorean') equals: 3
+]
+
+{ #category : #tests }
+CardTest >> testFreedomCardIsNotTakenAwayIfTheSpaceshipWasNotInJail [
+
+	| aBoard aCardDistribution anOutstandingGame box1 box2 box3 box4 box5 |
+	box1 := Box with: NoEffect new.
+	box2 := Box with: NoEffect new.
+	box3 := Box with: NoEffect new.
+	box4 := Box with: NoEffect new.
+	box5 := Box with: NoEffect new.
+
+	aBoard := Board
+		          of: 20
+		          and: (ParsecUnit of: 20)
+		          playedFor: 1
+		          with: { 
+				          box1.
+				          box2.
+				          box3.
+				          box4.
+				          box5 }.
+
+	aCardDistribution := OrderedCollection new.
+	aCardDistribution add:
+		(Distribution withProbabilityOf: 1 for: FreedomCard).
+
+	anOutstandingGame := OutstandingSpaceshipsGame
+		                     playedByMany: { 'Enterprise'. 'Delorean' }
+		                     on: aBoard
+		                     throwing: (LoadedDie withSequence: { 1. 2 })
+		                     using: aCardDistribution.
+
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 1.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Delorean') equals: 2.
+	self
+		should: [
+			anOutstandingGame
+				throws: (FreedomCard thrownAt: 'Enterprise')
+				from: 'Enterprise' ]
+		raise: Error
+		withMessage:
+		'Freedom card cant be used if the spaceship is not in jail'.
+	self assert: (anOutstandingGame deckOf: 'Enterprise') size equals: 2
 ]
 
 { #category : #tests }
@@ -684,7 +766,6 @@ CardTest >> testFreedomCardTakesTheSpaceshipOutOfJail [
 		                     on: aBoard
 		                     throwing: (LoadedDie withSequence: { 1. 2 })
 		                     using: aCardDistribution.
-
 	anOutstandingGame play.
 	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 1.
 	anOutstandingGame play.
@@ -1624,6 +1705,114 @@ CardTest >> testRepeatReplaysWormHoleEffect [
 
 	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 1.
 	self assert: (aBoard boxPositionOf: 'Delorean') equals: 1
+]
+
+{ #category : #tests }
+CardTest >> testReverseCardInvertsTurnOrder [
+
+	| aBoard aCardDistribution anOutstandingGame |
+	aBoard := Board
+		          of: 10
+		          and: (ParsecUnit of: 10)
+		          playedFor: 1
+		          with: { (Box with: NoEffect new) }.
+
+	aCardDistribution := OrderedCollection new.
+	aCardDistribution add:
+		(Distribution withProbabilityOf: 1 for: ReverseCard).
+	anOutstandingGame := OutstandingSpaceshipsGame
+		                     playedByMany: { 'Enterprise'. 'Delorean'. 'Zathura'. 'MillenniumFalcon' }
+		                     on: aBoard
+		                     throwing:
+		                     (LoadedDie withSequence: { 3. 4. 2. 1 })
+		                     using: aCardDistribution.
+	anOutstandingGame play.
+	anOutstandingGame play.
+
+	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 3.
+	self assert: (aBoard boxPositionOf: 'Delorean') equals: 4.
+	anOutstandingGame
+		throws: ReverseCard
+		from: 'Enterprise'.
+
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Delorean') equals: 6.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 4.
+]
+
+{ #category : #tests }
+CardTest >> testReverseCardInvertsTurnOrderAndThenItInvertsAgain [
+
+	| aBoard aCardDistribution anOutstandingGame |
+	aBoard := Board
+		          of: 10
+		          and: (ParsecUnit of: 10)
+		          playedFor: 1
+		          with: { (Box with: NoEffect new) }.
+
+	aCardDistribution := OrderedCollection new.
+	aCardDistribution add:
+		(Distribution withProbabilityOf: 1 for: ReverseCard).
+	anOutstandingGame := OutstandingSpaceshipsGame
+		                     playedByMany: { 'Enterprise'. 'Delorean'. 'Zathura'. 'MillenniumFalcon' }
+		                     on: aBoard
+		                     throwing:
+		                     (LoadedDie withSequence: { 3. 4. 2. 1 })
+		                     using: aCardDistribution.
+	anOutstandingGame play.
+	anOutstandingGame play.
+
+	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 3.
+	self assert: (aBoard boxPositionOf: 'Delorean') equals: 4.
+	anOutstandingGame
+		throws: ReverseCard
+		from: 'Enterprise'.
+
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Delorean') equals: 6.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 4.
+	anOutstandingGame
+		throws: ReverseCard
+		from: 'Delorean'.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 7.
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Delorean') equals: 10.
+]
+
+{ #category : #tests }
+CardTest >> testSkipCardSkipsTheActualSpaceshipTurn [
+
+	| aBoard aCardDistribution anOutstandingGame |
+	aBoard := Board
+		          of: 10
+		          and: (ParsecUnit of: 10)
+		          playedFor: 1
+		          with: { (Box with: NoEffect new) }.
+
+	aCardDistribution := OrderedCollection new.
+	aCardDistribution add:
+		(Distribution withProbabilityOf: 1 for: SkipCard).
+	anOutstandingGame := OutstandingSpaceshipsGame
+		                     playedByMany: { 'Enterprise'. 'Delorean'. 'Zathura'. 'MillenniumFalcon' }
+		                     on: aBoard
+		                     throwing:
+		                     (LoadedDie withSequence: { 3. 4. 2. 1 })
+		                     using: aCardDistribution.
+	anOutstandingGame play.
+	anOutstandingGame play.
+
+	self assert: (aBoard boxPositionOf: 'Enterprise') equals: 3.
+	self assert: (aBoard boxPositionOf: 'Delorean') equals: 4.
+	anOutstandingGame
+		throws: SkipCard
+		from: 'Enterprise'.
+
+	anOutstandingGame play.
+	self assert: (aBoard boxPositionOf: 'Zathura') equals: 0.
+	self assert: (aBoard boxPositionOf: 'MillenniumFalcon') equals: 2.
 ]
 
 { #category : #tests }
