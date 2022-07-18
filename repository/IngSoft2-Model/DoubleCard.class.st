@@ -44,6 +44,24 @@ DoubleCard >> assertItIsThrowableInTurn: anAssertion in: aGame [
 		anAssertion.
 ]
 
+{ #category : #accessing }
+DoubleCard >> cardBehaviour [
+
+	^ typeOfCard
+]
+
+{ #category : #playing }
+DoubleCard >> incorporate: aCard to: anOutstandingSpaceshipsGame [ 
+	
+	self cardBehaviour incorporate: aCard to: anOutstandingSpaceshipsGame 
+]
+
+{ #category : #playing }
+DoubleCard >> incorporateTo: anOutstandingSpaceshipsGame the: cardElement [
+
+	anOutstandingSpaceshipsGame repeatActualTurn.
+]
+
 { #category : #initialization }
 DoubleCard >> initializeAs: aTypeOfCard [
 

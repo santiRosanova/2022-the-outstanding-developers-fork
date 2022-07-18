@@ -44,6 +44,24 @@ SkipCard >> assertItIsThrowableInTurn: anAssertion in: aGame [
 		anAssertion.
 ]
 
+{ #category : #accessing }
+SkipCard >> cardBehaviour [
+
+	^ typeOfCard
+]
+
+{ #category : #playing }
+SkipCard >> incorporate: aCard to: anOutstandingSpaceshipsGame [ 
+	
+	self cardBehaviour incorporate: aCard to: anOutstandingSpaceshipsGame 
+]
+
+{ #category : #playing }
+SkipCard >> incorporateTo: anOutstandingSpaceshipsGame the: cardElement [
+
+	anOutstandingSpaceshipsGame skipActualTurn.
+]
+
 { #category : #initialization }
 SkipCard >> initializeAs: aTypeOfCard [
 

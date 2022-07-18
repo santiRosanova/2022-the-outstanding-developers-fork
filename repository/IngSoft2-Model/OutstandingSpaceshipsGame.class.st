@@ -66,10 +66,12 @@ OutstandingSpaceshipsGame >> addAffecting: aSpaceshipCardHolder [
 ]
 
 { #category : #playing }
-OutstandingSpaceshipsGame >> addAffectingAll: aCard [ 
-	
+OutstandingSpaceshipsGame >> addAffectingAll: aCard [
+
 	lastPlayedCard := aCard.
-	spaceshipsPlaying do: [ :spaceship | self addAffecting: (SpaceshipCardHolder of: spaceship holding: aCard) ]
+	spaceshipsPlaying do: [ :spaceship | 
+		self addAffecting:
+			(SpaceshipCardHolder of: spaceship holding: aCard) ]
 ]
 
 { #category : #playing }
@@ -118,9 +120,10 @@ OutstandingSpaceshipsGame >> cancel: aCard affecting: aSpaceship [
 
 { #category : #playing }
 OutstandingSpaceshipsGame >> cancelAll: cardType [
+
 	spaceshipsPlaying do: [ :spaceship | 
 		self cancel: cardType affecting: spaceship ].
-	lastPlayedCard := CancellationCard create.
+	lastPlayedCard := CancellationCard create
 ]
 
 { #category : #accessing }
@@ -162,7 +165,8 @@ OutstandingSpaceshipsGame >> deckOf: aSpaceship [
 { #category : #playing }
 OutstandingSpaceshipsGame >> free: aSpaceship [
 
-	board free: aSpaceship
+	board free: aSpaceship.
+	lastPlayedCard := FreedomCard create
 ]
 
 { #category : #initialization }
@@ -221,6 +225,7 @@ OutstandingSpaceshipsGame >> playTurn [
 OutstandingSpaceshipsGame >> repeatActualTurn [
 
 	board repeatActualTurn.
+	lastPlayedCard := DoubleCard create
 ]
 
 { #category : #playing }
@@ -234,6 +239,8 @@ OutstandingSpaceshipsGame >> repeatEffectOn: aSpaceship [
 OutstandingSpaceshipsGame >> skipActualTurn [
 
 	board skipActualTurn.
+	lastPlayedCard := SkipCard create
+	
 ]
 
 { #category : #playing }

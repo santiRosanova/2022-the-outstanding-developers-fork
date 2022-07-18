@@ -22,7 +22,7 @@ DiceCup >> initializeWithAll: aDice [
 { #category : #accessing }
 DiceCup >> maxRollResult [
 
-	^ dice inject: 0 into: [ :a :b | a + (b maxRollResult) ]
+	^ dice sum: [ :die | die maxRollResult ]
 ]
 
 { #category : #rolling }

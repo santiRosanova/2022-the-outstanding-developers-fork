@@ -55,6 +55,24 @@ FreedomCard >> assertItIsThrowableInTurn: anAssertion in: aGame [
 		anAssertion.
 ]
 
+{ #category : #accessing }
+FreedomCard >> cardBehaviour [
+
+	^ typeOfCard
+]
+
+{ #category : #playing }
+FreedomCard >> incorporate: aCard to: anOutstandingSpaceshipsGame [ 
+	
+	self cardBehaviour incorporate: aCard to: anOutstandingSpaceshipsGame 
+]
+
+{ #category : #playing }
+FreedomCard >> incorporateTo: anOutstandingSpaceshipsGame the: cardElement [
+
+	anOutstandingSpaceshipsGame free: cardElement target
+]
+
 { #category : #initialization }
 FreedomCard >> initializeAs: aTypeOfCard [
 
